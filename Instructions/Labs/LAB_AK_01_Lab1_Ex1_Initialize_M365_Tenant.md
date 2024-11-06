@@ -20,7 +20,7 @@ In your lab environment, your lab hosting provider has already obtained a Micros
 You will log into the Client 1 PC (LON-CL1) using the Adatum\Administrator account. When you access Microsoft 365 for the first time, you will initially log in using the Microsoft 365 tenant admin account (MOD Administrator). You will then update Adatum's Microsoft 365 organizational profile, and you'll prepare your tenant for Microsoft Entra ID, and for later labs using Information Rights Management, audit alerts, and Microsoft Graph PowerShell.
 
 
-### Task 1- Set up Adatum's Organization Profile
+### Task 1- Log into the Microsoft 365 admin center
 
 Throughout the labs in this course, you will role-play by taking on the persona of Holly Dickson, Adatum’s Microsoft 365 Administrator. In your role as Holly, you have been tasked with setting up the company’s profile for its Microsoft 365 trial tenant. In this task, you will configure the required options for Adatum’s tenant. Since Holly has yet to create a personal Microsoft 365 user account for herself (you will do this in the next lab exercise), Holly will initially sign into Microsoft 365 using the default Microsoft 365 tenant admin account and password that was created by your lab hosting provider. This account is the MOD Administrator account, whose alias is "admin". The username for this account is admin@xxxxxZZZZZZ.onmicrosoft.com (where xxxxxZZZZZZ is the tenant prefix assigned by your lab hosting provider); the display name for this account will be MOD Administrator.
 
@@ -73,62 +73,9 @@ Throughout the labs in this course, you will role-play by taking on the persona 
 
 	On the **Welcome to Microsoft 365** page, in the list of application icons that appear in the navigation pane, select **Admin**; this opens the **Microsoft 365 admin center** in a new browser tab. 
 
-14. In the **Microsoft 365 admin center**, select **Show all** in the navigation pane and then select **Settings**. In the **Settings** group, select **Org settings**. 
+14. In the **Microsoft 365 admin center**, select **Show all** in the navigation pane. This displays all the navigation options for the Microsoft 365 admin center.
 
-15. On the **Org settings** page, the **Services** tab is displayed by default. Select the **Organization profile** tab.
-
-16. In the **Organization profile** tab, select **Organization information** from the list of profile data.
-
-17. In the **Organization information** pane that appears, enter the following information: <br/>
-
-    - Name: **Adatum Corporation** (Note: Adatum Corporation is a subsidiary of Contoso Inc. The Microsoft trial tenant that your lab hosting provider obtained for this lab may have been originally assigned to Contoso. If **Contoso** (or any other value) appears as the organization name, then change it to **Adatum Corporation**.)
-
-    - Street Address: **555 Main Street**
-
-    - City: **Redmond**
-
-    - State or province: **Washington**
-
-    - ZIP or postal code: **98052**
-
-    - Phone: do not change
-
-    - Technical contact: do not change
-
-    - Preferred language: **English**
-
-18. Select **Save**.
-
-	**Note:** When you attempt to save your org profile changes, you may receive an error statement that says: "Object reference not set to an instance of an object." This error appears intermittently for no known reason. We are troubleshooting it to try and resolve the issue. In the meantime, if you receive this message, simply continue on with the lab. Not being able to save the org profile changes that you made will not affect any future lab steps.
-
-19. At the top of the **Organization information** pane, note the message indicating the changes have been saved. Select the **X** in the top corner of the pane to close it.
-
-20. Back on the **Organization profile** tab, in the list of organization profile data, select **Release preferences**.  <br/>
-
-    **Note:** One of the benefits of Microsoft 365 is its ability to have the latest features and updates automatically applied to your environment. This process can reduce maintenance costs and overhead for an organization and allow early-adopter users to test new features. By setting up your **Release preferences**, you can control how and when your Microsoft 365 tenant receives these updates. <br/>
-
-21. In the **Release preferences** pane that appears, the **Targeted release for select users** option enables you to create a control group of users who will preview updates so that you can prepare the updates for your entire organization. The **Targeted release for everyone** option is more commonly used in development environments, where you can get updates early for your entire organization. In non-development environments, such as Adatum, targeted release to a select group of users is a more typical preference as it enables an organization to control when it wants to make updates available to everyone once they've been reviewed by the control group. <br/>
-
-	Select the **Targeted release for select users** option and then select **Save**.
-
-22. In the **Release preferences** pane, below the list of release options, select the **Select users** option.
-
-23. In the **Choose users for targeted release** pane that appears, select inside the **Who should receive targeted releases?** field. This displays the list of active users (these are the Microsoft 365 user accounts created for your trial tenant by your lab hosting provider). In this list, select each of the following users. <br/>
-
-    **Note:** You must select each user, one at a time. After selecting a user, you must select inside the **Who should receive targeted releases?** field again to re-display the list so that you can select the next user. 
-
-	- **Alex Wilber**
-	- **Joni Sherman**
-	- **Lynne Robbins**
-	- **MOD Administrator** <br/>
-
-    **Note:** Alex, Joni, and Lynne are part of Holly's Microsoft 365 pilot team. Their accounts will be used throughout the labs for this course.
-    
-24. Select **Save**.
-
-25. At the top of the **Release preferences** pane, note the message indicating the 4 users were added to the targeted release. Select the **X** in the upper right-hand corner to close the pane. 
-
-26. Remain logged into **LON-CL1** with Microsoft Edge open to the **Microsoft 365 admin center** for the next task.
+15. Remain logged into **LON-CL1** with Microsoft Edge open to the **Microsoft 365 admin center** for the next task.
 
 ### Task 2- Create a custom theme for Adatum's pilot project team
 
