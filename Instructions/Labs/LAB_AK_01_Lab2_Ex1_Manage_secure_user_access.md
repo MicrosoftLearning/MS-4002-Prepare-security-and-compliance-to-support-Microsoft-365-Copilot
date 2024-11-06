@@ -1,8 +1,8 @@
 # Learning Path 1 - Lab 2 - Exercise 1 - Manage secure user access 
 
-Organizations must ensure that access to their company data on Microsoft 365 is always secure. Microsoft 365 - and int turn, Copilot for Microsoft 365 - often displays sensitive and confidential data, including emails, documents, customer information, and intellectual property. Unauthorized access to Microsoft 365 can lead to data breaches, identity theft, and other malicious activities. By securing user access, organizations can prevent unauthorized individuals from accessing and potentially misusing or leaking company data when working in Microsoft 365 and Copilot for Microsoft 365.
+Organizations must ensure that access to their company data on Microsoft 365 is always secure. Microsoft 365 often displays sensitive and confidential data, including emails, documents, customer information, and intellectual property. Unauthorized access to Microsoft 365 can lead to data breaches, identity theft, and other malicious activities. By securing user access, organizations can prevent unauthorized individuals from accessing and potentially misusing or leaking company data when working in Microsoft 365.
 
-In the following lab exercise, you will continue in your role as Holly Dickson, Adatum's new Microsoft 365 Administrator. You will perform several user management functions to prepare Adatum for its upcoming Copilot for Microsoft 365 deployment. You will begin by creating a Microsoft 365 user account for Holly, who will be assigned the Microsoft 365 Global Administrator role. 
+In the following lab exercise, you will continue in your role as Holly Dickson, Adatum's new Microsoft 365 Administrator. You will perform several user and group management functions within Microsoft 365. You will begin by creating a Microsoft 365 user account for Holly, who will be assigned the Microsoft 365 Global Administrator role. You will create several Microsoft 365 groups and assign existing Microsoft 365 users as members of those groups. You will then delete one of the groups and then use Windows PowerShell to recover the deleted group.
 
 **Note:** The VM environment provided by your lab hosting provider comes with over 20 existing Microsoft 365 user accounts, as well as a large number of existing on-premises user accounts. Several of the existing Microsoft 365 user accounts will be used throughout the labs in this course. Even though the MOD Administrator account has been created by your lab hosting provider, you will still create Holly Dickson's user account, since having more than one user who's assigned the Microsoft 365 Global Administrator role is a best practice. It will also provide you with the experience of creating a Microsoft 365 user account in case you're not familiar with the process.
 
@@ -15,7 +15,7 @@ Holly Dickson is Adatum’s new Microsoft 365 Administrator. Since a Microsoft 3
 
 **License Note:** Before creating Holly's account, you will first verify the number of available licenses. In doing so, you will note that while your lab tenant provides 20 Microsoft 365 E5 (no Teams) licenses and 20 Microsoft Teams Enterprise licenses, all those licenses have already been assigned to the existing user accounts created by your lab hosting provider. As such, you must first unassign one of each license from an existing user so that you can assign them to Holly.
 
-**Important:** As a best practice in your real-world deployment, you should always write down the credentials of the first Global administrator account (in this lab, it's the MOD Administrator account, whose username is admin@xxxxxZZZZZZ.onmicrosoft.com, where xxxxxZZZZZZ is the tenant prefix assigned by your lab hosting provider). You should store away this account information for security reasons. **This account should be a NON-personalized identity** that owns the highest privileges possible in a tenant. It should **not** be MFA activated because it is not personalized. Because the username and password for this first Global admin account are typically shared among several users, this account is a perfect target for attacks; therefore, it's always recommended that organizations create personalized service admin accounts (for example, an Exchange admin, SharePoint admin, and so on) and keep as few personal Global admins as possible. For those personal Global admins that you do create in your real-world deployment, they should each be mapped to a single user (such as Holly Dickson), and they should each have Microsoft Entra Multi-Factor Authentication (MFA) enforced.
+**Important:** As a best practice in your real-world deployment, you should always write down the credentials of the first Global administrator account (in this lab, it's the MOD Administrator account, whose username is admin@xxxxxZZZZZZ.onmicrosoft.com, where xxxxxZZZZZZ is the tenant prefix assigned by your lab hosting provider). You should store away this account information for security reasons. **This account should be a NON-personalized identity** that owns the highest privileges possible in a tenant. It should **not** be MFA activated because it is not personalized. Because the username and password for this first Global admin account are typically shared among several users, this account is a perfect target for attacks; therefore, it's always recommended that organizations create personalized service admin accounts (for example, an Exchange admin, SharePoint admin, and so on) and keep as few personal Global admins as possible. For those personal Global admins that you do create in your real-world deployment, they should each be mapped to a single user (such as Holly Dickson), and they should each have Microsoft Entra Multi-Factor Authentication (MFA) enforced.  
 
 1. On the **LON-CL1** VM, the **Microsoft 365 admin center** should still be open in your Microsoft Edge browser from the prior lab exercise. You should be signed into Microsoft 365 as the **MOD Administrator**. 
 
@@ -47,7 +47,7 @@ Holly Dickson is Adatum’s new Microsoft 365 Administrator. Since a Microsoft 3
 	
 	- Clear (uncheck) the **Automatically create a password** check box, which will display a new field for entering an administrator-defined password.
 
-	- Enter the New Administrative Password in the **Password** field that appears 
+	- Enter the New Administrative Password in the **Password** field that appears (this is the **New Administrative Password** that you were asked to create at the start of Lab 1, Exercise 1)
 
 	- Clear (uncheck) the **Require this user to change their password when they first sign in** check box 
 
@@ -75,7 +75,7 @@ Holly Dickson is Adatum’s new Microsoft 365 Administrator. Since a Microsoft 3
 
 16. On the **Review and finish** window, review your selections. If anything must be changed, select the appropriate **Edit** link and make the necessary changes. Otherwise, if everything is correct, select **Finish adding**. 
 
-17. On the **Holly Dickson added to active users** page, under the **User details** section, select the **Show** option to verify Holly's password is the same **Administrative Password** provided by your lab hosting provider for the tenant admin account (i.e. the MOD Administrator account).  <br/>
+17. On the **Holly Dickson added to active users** page, under the **User details** section, select the **Show** option to verify Holly's password is the same **New Administrative Password** that you were asked to create at the start of Lab 1, Exercise 1.  <br/>
 
 	**Note:** If you accidentally entered a different password, then once you return to the **Active Users** page, you will need to select the **Reset a password** icon (the key icon that appears when you hover over Holly's account) to change her password to the correct value.
 
@@ -133,63 +133,69 @@ In a previous task, you created a Microsoft 365 group for the members of Adatum'
 
 ### Task 3: Create a Conditional Access policy to implement MFA
 
-As your training indicated, there are three ways to implement MFA - with Conditional Access policies, with security defaults, and with legacy per-user MFA (not recommended for larger organizations). In this exercise, you'll enable MFA through a Conditional Access policy, which is the method that Microsoft recommends. Adatum has directed Holly to enable MFA for all its Microsoft 365 users - both internal and external. However, for the purpose of testing Adatum's Microsoft 365 pilot project implementation, Holly wants to exclude the members of the M365 pilot project group from having to use MFA to sign in. Once the pilot project is complete, Holly will update the policy by removing the exclusion of this group from the MFA requirement. The policy will also include two other requirements. It will require MFA for all cloud apps, and it will require MFA even if a user signs in from a trusted location. 
+As your training indicated, there are three ways to implement MFA - with Conditional Access policies, with security defaults, and with legacy per-user MFA (not recommended for larger organizations). In this exercise, you'll enable MFA through a Conditional Access policy, which is the method that Microsoft recommends. 
 
-1. On the LON-CL1 VM, the **Microsoft 365 admin center** should still be open in your Microsoft Edge browser from the prior task. You should be signed into Microsoft 365 as **Holly Dickson**.
+Adatum has directed Holly to enable MFA for all its Microsoft 365 users - both internal and external. However, for the purpose of testing Adatum's Microsoft 365 pilot project implementation, Holly wants to exclude the members of the M365 pilot project group from having to use MFA to sign in. Once the pilot project is complete, Holly plans to update the policy by removing the exclusion of this group from the MFA requirement. The policy will also include two other requirements. It will require MFA for all cloud apps, and it will require MFA even if a user signs in from a trusted location. 
+
+1. In the prior lab exercise, you were working on LON-DC1. In this task, you'll be working back on your Client 1 machine. <br/>
+
+	Switch to **LON-CL1**.
+
+2. On the LON-CL1 VM, the **Microsoft 365 admin center** should still be open in your Microsoft Edge browser from an earlier task. You should be signed into Microsoft 365 as **Holly Dickson**.
    
-2. In the **Microsoft 365 admin center**, under the **Admin centers** section in the navigation pane, select **Identity**. Doing so opens the Microsoft Entra admin center in a new browser tab. If a **Pick an account** window appears, select **Holly Dickson's account**.
+3. In the **Microsoft 365 admin center**, under the **Admin centers** section in the navigation pane, select **Identity**. Doing so opens the Microsoft Entra admin center in a new browser tab. If a **Pick an account** window appears, select **Holly Dickson's account**.
 
-3. In the **Microsoft Entra admin center**, select **Protection** in the navigation pane, and then select **Conditional Access**.
+4. In the **Microsoft Entra admin center**, select **Protection** in the navigation pane, and then select **Conditional Access**.
 
-4. On the **Conditional Access | Overview** page, select **Policies** in the middle navigation pane.
+5. On the **Conditional Access | Overview** page, select **Policies** in the middle navigation pane.
 
-5. On the **Conditional Access | Policies** page, on the menu bar at the top of the page, select **+New policy**.
+6. On the **Conditional Access | Policies** page, on the menu bar at the top of the page, select **+Create new policy**.
 
-6. On the **New Conditional Access policy** window, enter **MFA for all Microsoft 365 users** in the **Name** field.
+7. On the **New Conditional Access policy** window, enter **MFA for all Microsoft 365 users** in the **Name** field.
 
-7. You will begin by defining the MFA requirement for users. Under the **Users** group, select **0 users and groups selected**. Doing so displays two tabs - **Include** and **Exclude**.
+8. You will begin by defining the MFA requirement for users. Under the **Users** group, select **0 users and groups selected**. Doing so displays two tabs - **Include** and **Exclude**.
 
-8. Under the **Include** tab, select **All users**. Note the warning message that appears. You will address this in the next two steps.
+9. Under the **Include** tab, select **All users**. Note the warning message that appears. You will address this in the next two steps.
 
-9. Select the **Exclude** tab. To avoid system lockout, as the prior warning message indicated, you want to exclude your Global administrators - in this case, Holly. Holly also wants to exclude the other Microsoft 365 pilot project group members for the sake of expediency when testing. Once Microsoft 365 goes live at Adatum, Holly will remove the pilot project group from the Exclude list in this Conditional Access policy and simply exclude herself, the MOD Administrator, and a few other Global admins. But for now, Holly wants to exclude the entire pilot project group. <br/>
+10. Select the **Exclude** tab. To avoid system lockout, as the prior warning message indicated, you want to exclude your Global administrators - in this case, Holly. Holly also wants to exclude the other Microsoft 365 pilot project group members for the sake of expediency when testing. Once Microsoft 365 goes live at Adatum, Holly will remove the pilot project group from the Exclude list in this Conditional Access policy and simply exclude herself, the MOD Administrator, and a few other Global admins. But for now, Holly wants to exclude the entire pilot project group. <br/>
 
 	To do so, select the **Users and groups** check box. 
 
-10. In the **Select excluded users and groups** window that appears, you want to select the Microsoft 365 pilot project group. The **All** tab is displayed by default. To quickly find the pilot project group, select the **Groups** tab. In the list of active groups, select the check box next to the **M365 pilot project** group, and then select the **Select** button at the bottom of the window. Back on the **New Conditional Access policy** window, note the message that appears under the **Users** section. 
+11. In the **Select excluded users and groups** window that appears, you want to select the Microsoft 365 pilot project group. The **All** tab is displayed by default. To quickly find the pilot project group, select the **Groups** tab. In the list of active groups, select the check box next to the **M365 pilot project** group, and then select the **Select** button at the bottom of the window. Back on the **New Conditional Access policy** window, note the message that appears under the **Users** section. 
 
-11. You will now define the MFA requirement for all cloud apps. Under the **Target resources** section, select **No target resources selected**. Doing so displays two tabs - **Include** and **Exclude**.
+12. You will now define the MFA requirement for all cloud apps. Under the **Target resources** section, select **No target resources selected**. Doing so displays two tabs - **Include** and **Exclude**.
 
-12. Select the **Select what this policy applies to** drop-down field to see the various options in the drop-down menu. Select **Cloud apps**. 
+13. Select the **Select what this policy applies to** drop-down field to see the various options in the drop-down menu. Select **Resources (formerly cloud apps)**. 
 
-13. Under the **Include** tab, note that the default setting is **None**. If you did not change this setting, then no cloud apps would require MFA - and that includes Microsoft 365. So even if you created this policy and selected the option to require MFA for all users, but you left this **Target resources** setting to **None**, then any user signing into Microsoft 365 would not have to use MFA. <br/>
+14. Under the **Include** tab, note that the default setting is **None**. If you did not change this setting, then no cloud apps would require MFA - and that includes Microsoft 365. So even if you created this policy and selected the option to require MFA for all users, but you left this **Target resources** setting to **None**, then any user signing into Microsoft 365 would not have to use MFA. <br/>
 
-	Under the **Include** tab, select the **Select apps** option. Doing so displays two sections - **Edit filter** and **Select**. Under the **Select** section, select **None**. 
+	Under the **Include** tab, select the **Select resources** option. Doing so displays two sections - **Edit filter** and **Select**. Under the **Select** section, select **None**. 
 
-14. In the **Select Cloud apps** pane that appears, scroll down through the list of apps to see all the different apps that you could require MFA for. **Do NOT select any of the apps.** We're having you scroll through this list just to get a feel for how granular you can get when requiring MFA should you decide to limit MFA to certain apps in your real-world deployments.  <br/>
+15. In the **Select Resources** pane that appears, scroll down through the list of apps to see all the different apps that you could require MFA for. **Do NOT select any of the apps.** We're having you scroll through this list just to get a feel for how granular you can get when requiring MFA should you decide to limit MFA to certain apps in your real-world deployments.  <br/>
 
-	For Adatum, Holly wants to require MFA for all cloud apps, which is typically a more common business scenario than selecting specific apps. Under the **Include** tab, select the **All cloud apps** option. Adatum will not exclude any cloud apps from MFA authentication. You can select the **Exclude** tab if you want to see the options it provides. It works basically the same as the **Include** tab. You can view this tab, but do NOT select any cloud apps for exclusion. 
+	For Adatum, Holly wants to require MFA for all cloud apps, which is typically a more common business scenario than selecting specific apps. Under the **Include** tab, select the **All resources (formerly 'All cloud apps')** option. Adatum will not exclude any cloud apps from MFA authentication. You can select the **Exclude** tab if you want to see the options it provides. It works basically the same as the **Include** tab. You can view this tab, but do NOT select any cloud apps for exclusion. 
 
-15. Finally, you will define the MFA requirement for all user sign-in locations. In some scenarios, organizations may only require MFA if a user signs-in from an untrusted location. However, Adatum wants to require MFA for all included users, regardless of the location from where they sign in. <br/>
+16. Finally, you will define the MFA requirement for all user sign-in locations. In some scenarios, organizations may only require MFA if a user signs-in from an untrusted location. However, Adatum wants to require MFA for all included users, regardless of the location from where they sign in. <br/>
 
 	Under **Conditions**, select **0 conditions selected**. Doing so displays a list of potential conditions the policy will check for. For this lab exercise, under the **Locations** condition, select **Not configured**. Doing so displays a **Configure** toggle switch and two tabs - **Include** and **Exclude**. Both tabs are currently disabled.
 
-16. Set the **Configure** toggle switch to **Yes**, which enables the two tabs. 
+17. Set the **Configure** toggle switch to **Yes**, which enables the two tabs. 
 
-17. Under the **Include** tab, verify **Any network or location** is selected (select it if necessary). Select the **Exclude** tab. If your organization recognizes specific IP addresses or ranges of addresses as "trusted", you can exclude the MFA requirement if a user signs in from one of those locations. However, Adatum wants to require MFA for all user sign-in attempts, regardless of their location. This will include both internal and external user sign-ins. Verify the **Selected networks and locations** option is selected, and under the **Select** section, verify it says **None**. By not specifying any selected locations, this setting ensures that no locations are excluded from MFA. 
+18. Under the **Include** tab, verify **Any network or location** is selected (select it if necessary). Select the **Exclude** tab. If your organization recognizes specific IP addresses or ranges of addresses as "trusted", you can exclude the MFA requirement if a user signs in from one of those locations. However, Adatum wants to require MFA for all user sign-in attempts, regardless of their location. This will include both internal and external user sign-ins. Verify the **Selected networks and locations** option is selected, and under the **Select** section, verify it says **None**. By not specifying any selected locations, this setting ensures that no locations are excluded from MFA. 
 
-18. Under the **Access controls** section, under the **Grant** group, select **0 controls selected**. Doing so displays a **Grant** pane.
+19. Under the **Access controls** section, under the **Grant** group, select **0 controls selected**. Doing so displays a **Grant** pane.
 
-19. In the **Grant** pane that appears, verify the **Grant access** option is selected (select it if necessary). Note all the access controls that are available that can be enabled with this policy. This policy will only require MFA, so select the **Require multifactor authentication** check box. Select the **Select** button at the bottom of the **Grant** pane, which closes the pane. 
+20. In the **Grant** pane that appears, verify the **Grant access** option is selected (select it if necessary). Note all the access controls that are available that can be enabled with this policy. This policy will only require MFA, so select the **Require multifactor authentication** check box. Select the **Select** button at the bottom of the **Grant** pane, which closes the pane. 
 
-20. At the bottom of the **New Conditional Access policy** window, in the **Enable policy** field, select **On**.
+21. At the bottom of the **New Conditional Access policy** window, in the **Enable policy** field, select **On**.
 
-21. Note the warning message and options that appear at the bottom of the page that warn you not to lock yourself out. Select the option **I understand that my account will be impacted by this policy. Proceed anyway.** In fact, Holly won't be impacted since she's a member of the M365 pilot project group that is excluded from this policy.
+22. Note the warning message and options that appear at the bottom of the page that warn you not to lock yourself out. Select the option **I understand that my account will be impacted by this policy. Proceed anyway.** In fact, Holly won't be impacted since she's a member of the M365 pilot project group that is excluded from this policy.
 
-22. Select the **Create** button to create the policy.
+23. Select the **Create** button to create the policy.
 
-23. On the **Conditional Access | Policies** window that appears, verify the **MFA for all Microsoft 365 users** policy appears and that its **State** is set to **On**.
+24. On the **Conditional Access | Policies** window that appears, verify the **MFA for all Microsoft 365 users** policy appears and that its **State** is set to **On**.
 
-24. Remain logged into LON-CL1 with all your Microsoft Edge browser tabs open for the next task.
+25. Remain logged into LON-CL1 with all your Microsoft Edge browser tabs open for the next task.
 
 
 ### Task 4: Test MFA for both an included and excluded user
@@ -214,7 +220,7 @@ To test the Conditional Access policy that you just created, you will sign-out o
 
 7. In the **Choose a different method** dialog box that appears, select the drop-down arrow in the **Which method would you like to use?** field, select **Phone**, and then select **Confirm**. 
 
-8. In the **Phone** window that appears, under **What phone number would you like to use?** field, select your country or region, and then in the field next to it, enter your phone number (in the format **nnn-nnn-nnnn**). Verify the **Receive a code** option is selected and then select **Next**.
+8. In the **Phone** window that appears, under **What phone number would you like to use?** field, select your country or region, and then in the field next to it, enter your phone number (use your country specific formatting). Verify the **Receive a code** option is selected and then select **Next**.
 
 9. Retrieve the verification code from the text message that is sent to your phone.
 
@@ -222,7 +228,7 @@ To test the Conditional Access policy that you just created, you will sign-out o
 
 11. On the **Success!** page, select **Done**.
 
-12. Microsoft has implemented a new security policy in the trial tenants that are used in its training labs. All of the predefined test user accounts are configured so that students must change their initial password at their next sign-in. You experienced this earlier when you signed into Microsoft 365 as the MOD Administrator in the first lab exercise. You must do so now with Adele. <br>
+12. Microsoft has implemented a new security policy in the trial tenants that are used in its training labs. All of the predefined test user accounts are configured so that students must change their initial password at their next sign-in. You must do so now with Adele. <br>
 
 	In the **Update your password** window that appears, enter the **User Password** provided by your lab hosting provider in the **Current password** field. Then in the **New password** and **Confirm password** fields, enter the New User Password that you defined for all test users at the start of the lab. Select **Sign in**.
 
@@ -232,7 +238,7 @@ To test the Conditional Access policy that you just created, you will sign-out o
 
 15. If a **Create with Microsoft 365** window appears, select the **X** to close it.
 
-16. On the **Welcome to Microsoft 365** page, select the **Word** icon that appears in the column of app icons on the left-side of the screen. This opens **Microsoft Word Online**. Doing so validates that you can access a Microsoft 365 app after signing in using MFA.  <br/>
+16. On the **Welcome to Microsoft 365** page, select the **App launcher** icon, then select **Word**. This opens **Microsoft Word Online**. Doing so validates that you can access a Microsoft 365 app after signing in using MFA.  <br/>
 
 	**Important:** You have now verified that the first part of the Conditional Access policy that you created works. The policy requires that a user who is not a member of the Microsoft 365 pilot project team must sign-in using MFA. You verified this works when you signed in as Adele. You will now sign out as Adele and sign back in as Holly, during which you will verify that the second part of the Conditional Access policy also works. You should NOT have to use MFA when signing in as Holly, since she's a member of the M365 pilot project group, which is excluded from the MFA requirement in the Conditional Access policy.
 
@@ -263,13 +269,11 @@ The CTO is anxious to implement Smart Lockout because it will lock out the attac
 
 **Note:** You can maintain Account Lockout Policy settings in both the Group Policy Management Editor and in Microsoft Entra through its Smart Lockout feature. This lab task shows you how to access each method, although you will only update the Smart Lockout settings in Microsoft Entra. You must use the company's domain controller (LON-DC1) to access the Group Policy Management Editor. 
 
-1. In the prior tasks, you worked in LON-CL1. In this task, you will be working from Adatum's domain controller, LON-DC1. <br/>
+1. On LON-DC1, select the **Server Manager** icon on the taskbar if it’s already open; otherwise, open it now.
 
-	Switch to **LON-DC1**.
+2. In **Server Manager**, select **Tools** in the upper-right menu bar, and in the drop-down menu, select **Group Policy Management.**
 
-2. On **LON-DC1**, you must select **Ctrl+Alt+Delete** to log in (your instructor will guide you on how to find this option in your VM environment). Log into LON-DC1 as the local Adatum administrator account that was created by your lab hosting provider (**Administrator**) with the password **Pa55w.rd**.
-
-3. On LON-DC1, **Server Manager** automatically starts at boot-up. In **Server Manager**, select **Tools** in the upper-right menu bar, and in the drop-down menu, select **Group Policy Management.** Maximize the **Group Policy Management** window that appears.
+3. Maximize the **Group Policy Management** window.
 
 4. You want to edit the group policy that includes your organization's account lockout policy. If necessary, in the root console tree in the side pane, expand **Forest:Adatum.com**, then expand **Domains**, and then expand **Adatum.com**.  <br/>
 
@@ -281,33 +285,17 @@ The CTO is anxious to implement Smart Lockout because it will lock out the attac
 
 7. In the **Account Policies** folder, select **Account Lockout Policy**.
 
-8. As you can see in the pane that appears, none of the smart lockout parameters have been defined. Instead of maintaining these lockout parameters in the Group Policy Management Editor, you're instead going to use the Microsoft Entra admin center. While you can use the Group Policy Management Editor, this method is typically used in on-premises Active Directory environments. We showed you this editor so that you could see this alternative. However, for organizations that strictly use cloud-based services like Microsoft 365, or who find using the Microsoft Entra admin center much more user-friendly than accessing the Group Policy Management Editor, using the **Microsoft Entra admin center** to assign corresponding values in the Entra ID context is preferrable. <br/>  
+8. As you can see in the middle detail pane, none of the smart lockout parameters have been defined. Instead of maintaining these lockout parameters in the Group Policy Management Editor, you're instead going to use the Microsoft Entra admin center. While you can use the Group Policy Management Editor, this method is typically used in on-premises Active Directory environments. We showed you this editor so that you could see this alternative. However, for organizations that strictly use cloud-based services like Microsoft 365, or who find using the Microsoft Entra admin center much more user-friendly than accessing the Group Policy Management Editor, using the **Microsoft Entra admin center** to assign corresponding values in the Entra ID context is preferrable. <br/>  
 
 	Also keep in mind that the lockout behavior and customization options differ between the two methods. With the Group Policy Management Editor, you have more granular control over policy settings, including Account Lockout Threshold, Lockout Duration, and Reset Account Lockout Counter After. However, using this method requires familiarity with Group Policy and Active Directory administration. Conversely, the Account Lockout Policy in Microsoft Entra can't be customized as extensively. However, it’s easier to use, even though it lacks some of the fine-tuning options available in Group Policy. <br/>
 
-	For Adatum, Holly has chosen to use the Microsoft Entra admin center to configure the company's Account Lockout policy. ‎On the taskbar at the bottom of your screen, select the **Microsoft Edge** icon. If necessary, maximize your browser window when it opens.
+	For Adatum, Holly has chosen to use the Microsoft Entra admin center to configure the company's Account Lockout policy. ‎On the taskbar at the bottom of your screen, select the **Microsoft Edge** icon, which should be displaying the **Microsoft Entra admin center**. 
 
-9. In your Edge browser, go to the **Microsoft 365 Home** page by entering the following URL in the address bar: **https://portal.office.com** 
+9. In the **Microsoft Entra admin center**, select **Protection** in the navigation pane, and then select **Authentication methods** 
 
-10. In the **Sign in** dialog box, you must sign in as Holly Dickson. Enter **Holly@xxxxxZZZZZZ.onmicrosoft.com**, where xxxxxZZZZZZ is the tenant prefix assigned by your lab hosting provider. Select **Next**. <br/>
+10. In the **Authentication methods | Policies** page, in the middle pane under the **Manage** section, select **Password protection.**
 
-11. In the **Enter password** dialog box, enter the New Administrative Password that you assigned to Holly's account and then select **Sign in**. 
-
-12. On the **Stay signed in?** dialog box, select the **Don’t show this again** check box and then select **Yes.** On the **Save password** dialog box that appears, select **Never**.
-
-13. If a **Welcome to Microsoft 365** dialog box appears in the middle of the screen, there's no option to close it. Instead, to the right of the window, select the forward arrow icon (**>**) two times and then select the check mark icon to advance through the slides in this messaging window. 
-
-14. If a **Find more apps** window or a **Create with Microsoft 365** window appears, select the **X** in the upper top corner of the windows to close them. 
-
-15. On the **Welcome to Microsoft 365** page, in the list of application icons that appear in the side window pane, select **Admin**; this opens the **Microsoft 365 admin center** in a new browser tab. 
-
-16. In the **Microsoft 365 admin center**, select **Show all** in the navigation pane. Under **Admin centers**, select **Identity**, which displays the **Microsoft Entra admin center** in a new tab.
-
-17. In the **Microsoft Entra admin center**, select **Protection** in the navigation pane, and then select **Authentication methods**.
-
-18. In the **Authentication methods | Policies** page, in the middle pane under the **Manage** section, select **Password protection.**
-
-19. In the **Authentication methods | Password protection** window, in the detail pane on the right, enter the following information:
+11. In the **Authentication methods | Password protection** window, in the detail pane on the right, enter the following information:
 
 	- In the **Custom smart lockout** section:
 
@@ -331,40 +319,40 @@ The CTO is anxious to implement Smart Lockout because it will lock out the attac
 
 	- In the **Mode** section, select **Enforced**
 
-20. Select **Save** on the menu bar at the top of the page.
+12. Select **Save** on the menu bar at the top of the page.
 
-21. You should now test the banned password functionality. Select Holly Dickson's user icon in the upper right corner of the screen, and in the menu that appears select **View account**. 
+13. You should now test the banned password functionality. Select Holly Dickson's user icon in the upper right corner of the screen, and in the menu that appears select **View account**. 
 
-22. In the **My account** window that appears, in the **Password** tile, select **CHANGE PASSWORD**.
+14. In the **My account** window that appears, in the **Password** tile, select **CHANGE PASSWORD**.
 
-23. A new tab will open displaying the **Change password** window. In the **Old password** field, enter Holly's existing password, which is the New Administrative Password. <br/>
+15. A new tab will open displaying the **Change password** window. In the **Old password** field, enter Holly's existing password, which is the New Administrative Password. <br/>
 
 	Enter **Never4get!!** in the **Create new password** and **Confirm new password** fields, and then select **Submit**. Note the error message that you receive.
 
-24. In your browser, close the **Change password** tab. 
+16. In your browser, close the **Change password** tab. 
 
-25. You're now going to test the lockout threshold functionality. You're going to do so using Patti Fernandez's account. Select Holly Dickson's user icon in the upper right corner of the screen, and in the menu that appears select **Sign out**.  
+17. You're now going to test the lockout threshold functionality. You're going to do so using Laura Atkin's account, which you created in an earlier lab exercise. Select Holly Dickson's user icon in the upper right corner of the screen, and in the menu that appears select **Sign out**.  
 
-26. Once you are signed out as Holly, the **Pick an account** window will appear in the **Sign in to Microsoft Entra** tab. As a best practice when signing out from a Microsoft online service as one user and signing back in as another, close all your browser tabs except for the **Sign out** or **Sign in** tab. In this case, close the other tabs now and leave the **Sign in** tab open.  <br/>
+18. Once you are signed out as Holly, the **Pick an account** window will appear in the **Sign in to Microsoft Entra** tab. As a best practice when signing out from a Microsoft online service as one user and signing back in as another, close all your browser tabs except for the **Sign out** or **Sign in** tab. In this case, close the other tabs now and leave the **Sign in** tab open.  <br/>
 
 	In the **Pick an account** window, select **Use another account**. 
 
-27. In the **Sign in** window, enter **pattif@xxxxxZZZZZZ.onmicrosoft.com** (where xxxxxZZZZZZ is the tenant prefix assigned to you by your lab hosting provider), and then select **Next**. 
+19. In the **Sign in** window, enter **laura@xxxxxZZZZZZ.onmicrosoft.com** (where xxxxxZZZZZZ is the tenant prefix assigned to you by your lab hosting provider), and then select **Next**. 
 
-28. On the **Enter password** window, enter any random mix of letters and numbers and then select **Sign in**. Note the invalid password error message that appears. 
+20. On the **Enter password** window, enter any random mix of letters and numbers and then select **Sign in**. Note the invalid password error message that appears. 
 
 	Repeat this step 2 more times. 
 	
 	Since you set the **Lockout threshold** to **3**, you should receive an error message indicating that this account is locked after the third failed sign-in attempt. <br/>
 
-	**Note:** If you do not receive this lockout message after the third attempt, then the system has not yet finished propagating this lockout threshold change throughout the service. It may take several minutes for the change to take effect. Wait a few minutes and then sign-in again with a bogus password. Testing of this lab has seen varying results. The change sometimes propagates almost immediately so that you get locked out after the third sign-in attempt. Other times it has taken anywhere from 5 to 10 minutes before the lockout message is displayed. Continue this process until you receive the lockout message, at which point Patti's account will be temporarily locked to prevent unauthorized access.
+	**Note:** If you do not receive this lockout message after the third attempt, then the system has not yet finished propagating this lockout threshold change throughout the service. It may take several minutes for the change to take effect. Wait a few minutes and then sign-in again with a bogus password. Testing of this lab has seen varying results. The change sometimes propagates almost immediately so that you get locked out after the third sign-in attempt. Other times it has taken anywhere from 5 to 10 minutes before the lockout message is displayed. Continue this process until you receive the lockout message, at which point Laura's account will be temporarily locked to prevent unauthorized access.
 
-29. You will be prohibited from logging in again as Patti until after the **90 second lockout duration** that you set earlier. <br/>
+21. You will be prohibited from logging in again as Laura until after the **90 second lockout duration** that you set earlier. <br/>
 
-	Once you've been locked out, wait 90 seconds and then sign back in as **pattif@xxxxxZZZZZZ.onmicrosoft.com** (where xxxxxZZZZZZ is the tenant prefix assigned to you by your lab hosting provider). In the **Password** field, enter Patti's password, which is the **User Password** provided by your lab hosting provider. 
- 
-30. As you recall, all the predefined test user accounts in your trial tenant are configured so that you must change their initial password at their next sign-in. When the **Update your password** window appears, that is verification that your sign-in attempt using Patti's actual password was successful. <br>
+	Once you've been locked out, wait 90 seconds and then sign back in as **laura@xxxxxZZZZZZ.onmicrosoft.com** (where xxxxxZZZZZZ is the tenant prefix assigned to you by your lab hosting provider). In the **Password** field, enter Laura's password, which is the New User Password that you assigned to Laura's account when you created it. 
 
-	**Note:** You do NOT need to complete the sign-in process for Patti, since this is your last lab exercise using the LON-DC1 domain controller. You can close all applications on LON-DC1.
- 
+22. Because MFA is enabled for all users except for the M365 pilot project group members (of which, Laura is not a member), a **More information required** window appears so that you can complete the MFA process for Laura. This is verification that your sign-in attempt using Laura's actual password was successful.  <br>
+
+	**Note:** You do NOT need to complete the MFA process for Laura, since this is your last lab exercise using the LON-DC1 domain controller. You can close all applications on LON-DC1.
+
 # Proceed to Lab 2 - Exercise 2
