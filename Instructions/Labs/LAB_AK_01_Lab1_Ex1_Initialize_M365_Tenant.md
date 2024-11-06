@@ -14,10 +14,10 @@ As Adatum's Microsoft 365 administrator, you have been tasked with deploying Mic
 
 In your lab environment, your lab hosting provider has already obtained a Microsoft 365 trial tenant for you. Your lab provider has also created two admin accounts that you will use in your VM lab environment: 
 
-- A local administrator account for Adatum's on-premises environment (Adatum\Administrator).
+- An AD DS administrator account for Adatum's on-premises environment (Adatum\Administrator).
 - A default tenant admin account in Microsoft 365 (the display name for this user account is MOD Administrator). 
 
-You will log into the Client 1 PC (LON-CL1) using the local Adatum\Administrator account. When you access Microsoft 365 for the first time, you will initially log in using the Microsoft 365 tenant admin account (MOD Administrator). You will then prepare Adatum's Microsoft 365 tenant for Microsoft Entra ID and for later labs using audit alerts and Microsoft Graph PowerShell.
+You will log into the Client 1 PC (LON-CL1) using the Adatum\Administrator account. When you access Microsoft 365 for the first time, you will initially log in using the Microsoft 365 tenant admin account (MOD Administrator). You will then update Adatum's Microsoft 365 organizational profile, and you'll prepare your tenant for Microsoft Entra ID, and for later labs using Information Rights Management, audit alerts, and Microsoft Graph PowerShell.
 
 
 ### Task 1- Set up Adatum's Organization Profile
@@ -26,7 +26,14 @@ Throughout the labs in this course, you will role-play by taking on the persona 
 
 1. Your lab-hosting provider will be providing two passwords that are used with the fictitious user accounts in your Microsoft 365 trial tenant. The MOD Administrator account, which is the default tenant administrator, has been assigned the **Administrative Password**. All other users - even those assigned an admin role - have been assigned the **User Password**. <br>
 
-	For security purposes, Microsoft has configured your trial tenant so that all predefined users must change their password at their next sign-in. Some lab hosting providers may provide two new password fields, one for administrators (actually, the MOD admin and Holly Dickson) and one for all other users. If these two new password fields appear in your VM, then enter a new password for each. These new password values will be stored in the VM and displayed in the lab instructions. <br>
+	For security purposes, Microsoft has configured your trial tenant so that all predefined users must change their password at their next sign-in. <br>
+ 
+ 	**Important:** Some lab hosting providers may provide the following new password fields that will be used to store the new passwords that you will assign to users the first time they sign in: <br>
+
+	- **New Administrative Password** - This is the new password that you will assign to the MOD administrator and Holly Dickson
+ 	- **New User Password** - This is the new password that you will assign to all other users.
+
+ 	If these two new password fields appear in your VM, then enter a new password for each. These new password values will be stored in the VM and displayed in the lab instructions. <br>
  
 	Other lab hosting providers may not provide these new password fields. For those environments, you must manually write down the new password that you plan to assign to users who sign in. <br>
 
@@ -38,41 +45,41 @@ Throughout the labs in this course, you will role-play by taking on the persona 
 	   - 1 special character
 	The passwords will not be validated against Microsoft's requirements until you change the old password at the user's next sign-in.
 
-2. When you open your lab hosting provider's Virtual Machine environment, you need to begin with the Client 1 VM (LON-CL1). If your VM environment opens with one of the other machines (such as LON-DC1), then switch to **LON-CL1** now.
+3. When you open your lab hosting provider's Virtual Machine environment, you need to begin with the Client 1 VM (LON-CL1). If your VM environment opens with one of the other machines (such as LON-DC1), then switch to **LON-CL1** now.
 
-3. Log into **LON-CL1** as the local **Administrator** account that was created by your lab hosting provider with the password **Pa55w.rd**. 
+4. Log into **LON-CL1** as the **Administrator** account that was created by your lab hosting provider with the password **Pa55w.rd**. 
 
-4. On the taskbar at the bottom of your screen, select the **Microsoft Edge** icon. If necessary, maximize your browser window when it opens.
+5. On the taskbar at the bottom of your screen, select the **Microsoft Edge** icon. If necessary, maximize your browser window when it opens.
 
-5. In your Edge browser, go to the **Microsoft 365 Home** page by entering the following URL in the address bar: **https://portal.office.com** 
+6. In your Edge browser, go to the **Microsoft 365 Home** page by entering the following URL in the address bar: **https://portal.office.com** 
 
-6. In the **Sign in** dialog box, enter the **Administrative Username** provided by your lab hosting provider (this is the MOD Administrator account) for your Microsoft 365 trial tenant. The username should be in the form of **admin@xxxxxZZZZZZ.onmicrosoft.com**, where xxxxxZZZZZZ is the tenant prefix assigned by your lab hosting provider. Select **Next**. <br/>
+7. In the **Sign in** dialog box, enter the **Administrative Username** provided by your lab hosting provider (this is the MOD Administrator account) for your Microsoft 365 trial tenant. The username should be in the form of **admin@xxxxxZZZZZZ.onmicrosoft.com**, where xxxxxZZZZZZ is the tenant prefix assigned by your lab hosting provider. Select **Next**. <br/>
 
 	**Note:** In the lab instructions that appear in your VM lab environment, your lab hosting provider may provide the ability to select a **Type text** (or equivalent) button next to resource data such as usernames, passwords, PowerShell commands, and other data that must be entered throughout the course of these labs. Other lab hosting providers may provide an alternative method, such as the ability to copy and paste in this information. Take advantage of this functionality to save yourself from having to manually enter this information. 
 
-7. In the **Enter password** dialog box, enter the predefined **Administrative Password** provided by your lab hosting provider and then select **Sign in**. 
+8. In the **Enter password** dialog box, enter the predefined **Administrative Password** provided by your lab hosting provider and then select **Sign in**. 
 
-8. Your lab hosting provider may or may not have configured the MOD Admin account to require a new password at sign-in. If they did, then an **Update your password** dialog box will appear. If this occurs, enter the **Administrative Password** provided by your lab hosting provider in the **Current password** field, and then enter the New Administrative Password in the **New password** and **Confirm password** fields and select **Sign in**.
+9. Your lab hosting provider may or may not have configured the MOD Admin account to require a new password at sign-in. If they did, then an **Update your password** dialog box will appear. If this occurs, enter the **Administrative Password** provided by your lab hosting provider in the **Current password** field, and then enter the New Administrative Password in the **New password** and **Confirm password** fields.
 
-9. If a **Stay signed in?** dialog box appears, select the **Don’t show this again** check box and then select **Yes.** 
+10. If a **Stay signed in?** dialog box appears, select the **Don’t show this again** check box and then select **Yes.** 
 
-10. If a **Welcome to Microsoft 365** dialog box appears in the middle of the screen, there's no option to close it. Instead, to the right of the window, select the forward arrow icon (**>**) two times and then select the check mark icon to advance through the slides in this messaging window. 
+11. If a **Welcome to Microsoft 365** dialog box appears in the middle of the screen, there's no option to close it. Instead, to the right of the window, select the forward arrow icon (**>**) two times and then select the check mark icon to advance through the slides in this messaging window. 
 
-11. If a **Find more apps** dialog box or a **Create with Microsoft 365** dialog box appears, select the **X** in the top corner of the boxes to close them. Similarly, if a Sing in to Microsoft Edge dialog box appears, select the **No thanks** button.
+12. If a **Find more apps** dialog box or a **Create with Microsoft 365** dialog box appears, select the **X** in the top corner of the boxes to close them. Similarly, if a Sign in to Microsoft Edge dialog box appears, select the **No thanks** button.
 
-12. The **Welcome to Microsoft 365** page appears in your Edge browser in the **Home | Microsoft 365** tab. This is the MOD Administrator's Microsoft 365 home page. <br/>
+13. The **Welcome to Microsoft 365** page appears in your Edge browser in the **Home | Microsoft 365** tab. This is the MOD Administrator's Microsoft 365 home page. <br/>
 
 	Notice that either an icon or a circle with "MA" (the initials for MOD Administrator) appears in the top-right corner of the screen. Some trial tenants show an icon; others show the "MA" initials in a circle; it all depends on whether your lab hosting provider added an icon to the MOD Administrator's account. The icon or initials represents the **MOD Administrator** account, which is the tenant administrator account created by your lab hosting provider that you just signed in as. If any of the existing Microsoft 365 user accounts that were created by your lab hosting provider have a picture associated with their account, the user's picture is displayed rather than the user's initials when you sign into Microsoft 365 as that user. However, when a user such as the MOD Administrator has no picture assigned to it, either the user's initials are displayed in place of the picture, or an icon is displayed if one was assigned to the account by your lab hosting provider. <br/>
 
 	On the **Welcome to Microsoft 365** page, in the list of application icons that appear in the navigation pane, select **Admin**; this opens the **Microsoft 365 admin center** in a new browser tab. 
 
-13. In the **Microsoft 365 admin center**, select **Show all** in the navigation pane and then select **Settings**. In the **Settings** group, select **Org settings**. 
+14. In the **Microsoft 365 admin center**, select **Show all** in the navigation pane and then select **Settings**. In the **Settings** group, select **Org settings**. 
 
-14. On the **Org settings** page, the **Services** tab is displayed by default. Select the **Organization profile** tab.
+15. On the **Org settings** page, the **Services** tab is displayed by default. Select the **Organization profile** tab.
 
-15. In the **Organization profile** tab, select **Organization information** from the list of profile data.
+16. In the **Organization profile** tab, select **Organization information** from the list of profile data.
 
-16. In the **Organization information** pane that appears, enter the following information: <br/>
+17. In the **Organization information** pane that appears, enter the following information: <br/>
 
     - Name: **Adatum Corporation** (Note: Adatum Corporation is a subsidiary of Contoso Inc. The Microsoft trial tenant that your lab hosting provider obtained for this lab may have been originally assigned to Contoso. If **Contoso** (or any other value) appears as the organization name, then change it to **Adatum Corporation**.)
 
@@ -90,11 +97,38 @@ Throughout the labs in this course, you will role-play by taking on the persona 
 
     - Preferred language: **English**
 
-17. Select **Save**.
+18. Select **Save**.
 
-18. At the top of the **Organization information** pane, note the message indicating the changes have been saved. Select the **X** in the top corner of the pane to close it.
+	**Note:** When you attempt to save your org profile changes, you may receive an error statement that says: "Object reference not set to an instance of an object." This error appears intermittently for no known reason. We are troubleshooting it to try and resolve the issue. In the meantime, if you receive this message, simply continue on with the lab. Not being able to save the org profile changes that you made will not affect any future lab steps.
 
-19. Remain logged into **LON-CL1** with Microsoft Edge open to the **Microsoft 365 admin center** for the next task.
+19. At the top of the **Organization information** pane, note the message indicating the changes have been saved. Select the **X** in the top corner of the pane to close it.
+
+20. Back on the **Organization profile** tab, in the list of organization profile data, select **Release preferences**.  <br/>
+
+    **Note:** One of the benefits of Microsoft 365 is its ability to have the latest features and updates automatically applied to your environment. This process can reduce maintenance costs and overhead for an organization and allow early-adopter users to test new features. By setting up your **Release preferences**, you can control how and when your Microsoft 365 tenant receives these updates. <br/>
+
+21. In the **Release preferences** pane that appears, the **Targeted release for select users** option enables you to create a control group of users who will preview updates so that you can prepare the updates for your entire organization. The **Targeted release for everyone** option is more commonly used in development environments, where you can get updates early for your entire organization. In non-development environments, such as Adatum, targeted release to a select group of users is a more typical preference as it enables an organization to control when it wants to make updates available to everyone once they've been reviewed by the control group. <br/>
+
+	Select the **Targeted release for select users** option and then select **Save**.
+
+22. In the **Release preferences** pane, below the list of release options, select the **Select users** option.
+
+23. In the **Choose users for targeted release** pane that appears, select inside the **Who should receive targeted releases?** field. This displays the list of active users (these are the Microsoft 365 user accounts created for your trial tenant by your lab hosting provider). In this list, select each of the following users. <br/>
+
+    **Note:** You must select each user, one at a time. After selecting a user, you must select inside the **Who should receive targeted releases?** field again to re-display the list so that you can select the next user. 
+
+	- **Alex Wilber**
+	- **Joni Sherman**
+	- **Lynne Robbins**
+	- **MOD Administrator** <br/>
+
+    **Note:** Alex, Joni, and Lynne are part of Holly's Microsoft 365 pilot team. Their accounts will be used throughout the labs for this course.
+    
+24. Select **Save**.
+
+25. At the top of the **Release preferences** pane, note the message indicating the 4 users were added to the targeted release. Select the **X** in the upper right-hand corner to close the pane. 
+
+26. Remain logged into **LON-CL1** with Microsoft Edge open to the **Microsoft 365 admin center** for the next task.
 
 ### Task 2- Create a custom theme for Adatum's pilot project team
 
@@ -104,7 +138,7 @@ Custom themes must be associated with one or more Microsoft 365 groups. Therefor
 
 **Important:** At the end of this task, you will attempt to save the custom theme that you created. There is a known platform issue in the Microsoft 365 admin center where sometimes it saves the custom theme just fine, and other times it returns a message that says "Sorry, we couldn't save your theme. Please try again later." If you receive this message, there's nothing you can do but move on. Trying to save the theme at a later time usually returns the same error. This issue won't affect any future labs, other than it won't display the user's name next to their user icon or initials on the heading line. Despite this known issue, we still want you to perform this task to gain experience in creating a theme, even though it may not get saved in your trial tenant.
 
-1. You should still be logged into LON-CL1 as the local **adatum\administrator** account, and in your Edge browser, you should still be logged into Microsoft 365 as the **MOD Administrator**. 
+1. You should still be logged into LON-CL1 as the **adatum\administrator** account, and in your Edge browser, you should still be logged into Microsoft 365 as the **MOD Administrator**. 
 
 2. In the **Microsoft 365 admin center**, select **Teams & groups** in the navigation pane, and then under it, select **Active teams & groups**. 
 
@@ -166,7 +200,7 @@ Custom themes must be associated with one or more Microsoft 365 groups. Therefor
 
 	**Note:** As previously mentioned at the start of this task, there's a known platform issue in the Microsoft 365 admin center where sometimes it saves a new custom theme, and other times it returns a message that says "Sorry, we couldn't save your theme. Please try again later." If you receive this message, it won't affect any future labs. Since your custom theme didn't get save, the system simply won't display the user's name next to their user icon or initials on the heading line (plus any color changes you may have made won't appear). We still asked you to do this task even though you may receive this message in order to gain the experience of creating a theme such as this. So if you get this error, skip the next step, which tests the custom theme. However, you can still perform the remaining steps following the next step in order to learn about the Default theme. Whether or not your custom theme was saved, close the **M365 pilot project theme** pane.
 
-23. If your custom theme did not get saved, then skip to the next step. However, if your custom theme was saved, then select the **Refresh** icon at the top of the screen, to the left of the address bar. Once the screen refreshes, note how the **MOD Administrator** name appears to the left of either the circle with the MA initials or the icon selected for this account by your lab-hosting provider. When members of the Microsoft 365 pilot project team sign in to Microsoft 365, this custom theme will display their username, just as the MOD Administrator name appears here. 
+23. If your custom theme did not get saved, then skip to the next step. However, if your custom theme was saved, then select the **Refresh** icon at the top of the screen, next to the address bar. Once the screen refreshes, note how the **MOD Administrator** name appears next to either the circle with the MA initials or the icon selected for this account by your lab-hosting provider. When members of the Microsoft 365 pilot project team sign in to Microsoft 365, this custom theme will display their username, just as the MOD Administrator name appears here. 
 
 24. In the list of organization profile data, select **Custom themes**.
 
@@ -180,11 +214,12 @@ Custom themes must be associated with one or more Microsoft 365 groups. Therefor
 
 28. Remain logged into **LON-CL1** with Microsoft Edge open to the **Microsoft 365 admin center** for the next task.
 
+
 ### Task 3 – Install Microsoft Graph PowerShell 
 
 Microsoft Graph PowerShell is required to perform several configuration tasks when installing Microsoft 365. Because future lab exercises will perform several of these tasks using Windows PowerShell, you should begin by installing the Microsoft Graph PowerShell module. This module allows you to perform many of the Microsoft 365 user and organization administration tasks through PowerShell. It’s great for bulk tasks such as password resets, password policies, license management and reporting, and so on.  
 
-1. On LON-CL1, you should still be logged in as the local **adatum\administrator** account. To install Microsoft Graph PowerShell, you must open an elevated instance of **Windows PowerShell**. Type **power** in the Search box that appears in the bottom left corner of the taskbar. In the list of search results, right-click on **Windows PowerShell** (do not select Windows PowerShell ISE) and select **Run as administrator** in the drop-down menu that appears. 
+1. On LON-CL1, you should still be logged in as the **adatum\administrator** account. To install Microsoft Graph PowerShell, you must open an elevated instance of **Windows PowerShell**. Right-click the **Windows (Start)** icon in the lower left corner of the taskbar, and then select **Windows PowerShell (Admin)**.
 
 2. Maximize your PowerShell window. In **Windows PowerShell**, type the following command at the command prompt to install the Microsoft Graph PowerShell module from the PowerShell Gallery and then press Enter: <br/>
 
@@ -216,13 +251,13 @@ Microsoft Graph PowerShell is required to perform several configuration tasks wh
 
 6. PowerShell's execution policy settings dictate what PowerShell scripts can be run on a Windows system. Setting this policy to **Unrestricted** enables Holly to load all configuration files and run all scripts. At the command prompt, type the following command, and then press Enter:   <br/>
 
-		Set-ExecutionPolicy unrestricted
+		Set-ExecutionPolicy RemoteSigned
 
 	‎If you are prompted to verify that you want to change the execution policy, enter **A** to select **[A] Yes to All.** 
 
-7. Leave your PowerShell window open but minimize it. You will use it in a later lab exercise.
+7. Leave your PowerShell window open as you will use it in the next task.
 
 
-**Congratulations! You have completed all the steps to initialize your lab tenant. You are now ready to perform the remaining lab exercises.**
+Congratulations! You have completed all the steps to initialize your lab tenant. You are now ready to perform the remaining lab exercises.
 
 # End of Lab 1
