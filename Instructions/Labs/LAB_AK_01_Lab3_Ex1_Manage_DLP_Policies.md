@@ -131,7 +131,7 @@ The issue with this feature is that DLP policies don't take into account Word fi
 
 To turn off this setting, you must create a policy for Office apps in the Microsoft Intune admin center. In the policy that you create, you'll add the **Turn off Send to Kindle** setting to the policy, and you'll then enable this setting. Enabling this setting in the policy turns off the **Send to Kindle** feature once you finish creating the policy. At that point, users will no longer be able to send Word documents to their Kindle library.
 
-**Note:** This issue is something that you should consider addressing in your real-world Microsoft 365 deployments. For more information on this **Send to Kindle** feature, see https://support.microsoft.com/en-us/office/send-to-kindle-a53d880d-9952-4bf1-abc5-6bce8db5a273.
+**Note:** This issue is something that you should consider addressing in your real-world Microsoft 365 deployments. For more information on this **Send to Kindle** feature, see https://support.microsoft.com/office/send-to-kindle-a53d880d-9952-4bf1-abc5-6bce8db5a273.
 
 1. On LON-CL1, in your Edge browser, you should still be logged into Microsoft 365 as **Holly Dickson**. 
 
