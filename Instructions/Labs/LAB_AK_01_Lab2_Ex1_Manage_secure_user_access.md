@@ -1,3 +1,15 @@
+---
+lab:
+  title: Learning Path 1 - Lab 2 - Exercise 1 - Manage secure user access
+  description: In the following lab exercise, you will continue in your role as Holly Dickson, Adatum's new Microsoft 365 Administrator. You will perform several user and group management functions within Microsoft 365. You will begin by creating a Microsoft 365 user account for Holly, who will be assigned the Microsoft 365 Global Administrator role. You will create several Microsoft 365 groups and assign existing Microsoft 365 users as members of those groups. You will then delete one of the groups and then use Windows PowerShell to recover the deleted group.
+  duration: 10 minutes
+  level: 300
+  islab: true
+  primarytopics:
+    - Microsoft 365
+    - Windows
+---
+
 # Learning Path 1 - Lab 2 - Exercise 1 - Manage secure user access 
 
 Organizations must ensure that access to their company data on Microsoft 365 is always secure. Microsoft 365 often displays sensitive and confidential data, including emails, documents, customer information, and intellectual property. Unauthorized access to Microsoft 365 can lead to data breaches, identity theft, and other malicious activities. By securing user access, organizations can prevent unauthorized individuals from accessing and potentially misusing or leaking company data when working in Microsoft 365.
