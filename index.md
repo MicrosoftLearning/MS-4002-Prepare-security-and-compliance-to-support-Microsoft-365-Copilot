@@ -1,24 +1,21 @@
 ---
-title: Exercise Instructions
+title: Online Hosted Instructions
 permalink: index.html
 layout: home
 ---
 
-# Exercises
+# Content Directory
 
-This page lists exercises associated with Microsoft skilling content on [Microsoft Learn](https://learn.microsoft.com)
+These labs support [MS-4002: Prepare security and compliance to support Microsoft 365 Copilot](https://learn.microsoft.com/training/courses/ms-4002).
 
-<!-- You can edit the paragraph above to provide a more specific description and links to content on Learn.
+Required lab files can be [downloaded here]({{ site.github.repository_url }}/archive/refs/heads/master.zip).
 
-Include the following note if an Azure subscription is required (or add something similar for any other requirements, such as a Microsoft 365 account).
+> **Note**: These exercises require a Microsoft 365 lab tenant and accounts provided by your lab hosting provider. Follow the tenant setup instructions in the first exercise.
 
-> **Note**: To complete these exercises, you will need a [Microsoft Azure subscription](https://azure.microsoft.com/free) in which you have sufficient permissions to create and configure the required resources.
+## Labs
 
-If a more complex setup is required, create a separate markdown file with setup instructions at \Instructions\Labs\00-setup.md - being sure to include "lab.title"" metadata at the top so it shows up the list below
--->
-
-{% assign labs = site.pages | where_exp:"page", "page.url contains '/Instructions/Labs'" %}
-{% for activity in labs  %}
-- [{{ activity.lab.title }}]({{ site.github.url }}{{ activity.url }})
+{% assign labs = site.pages | where_exp: "page", "page.url contains '/Instructions/Labs/'" | where_exp: "page", "page.lab.title" | sort: "path" %}
+| Lab |
+| --- |
+{% for activity in labs %}| [{{ activity.lab.title }}]({{ activity.url | relative_url | uri_escape }}) |
 {% endfor %}
-
