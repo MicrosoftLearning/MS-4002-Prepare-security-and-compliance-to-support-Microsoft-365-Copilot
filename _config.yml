@@ -1,4 +1,15 @@
 remote_theme: MicrosoftLearning/Jekyll-Theme
+title: "MS-4002: Prepare security and compliance to support Microsoft 365 Copilot"
+description: Hands-on lab instructions for MS-4002.
+url: https://sayedimac.github.io
+baseurl: /MS-4002-Prepare-security-and-compliance-to-support-Microsoft-365-Copilot
+repository: sayedimac/MS-4002-Prepare-security-and-compliance-to-support-Microsoft-365-Copilot
+defaults:
+  - scope:
+      path: Instructions/Labs
+      type: pages
+    values:
+      layout: page
 exclude:
   - readme.md
   - .github/
