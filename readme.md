@@ -1,3 +1,5 @@
+**This course will be retired on 2026-10-30. Once course is retired, all GitHub repos will be removed. Thank you!**
+
 # Microsoft Lab Exercises
 <!-- Change the title above as appropriate -->
 
